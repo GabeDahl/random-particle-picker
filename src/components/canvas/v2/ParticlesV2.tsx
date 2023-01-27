@@ -70,9 +70,9 @@ export const ParticlesV2 = ({ option }: { option: Option }) => {
       const σ = 10,
         ρ = 28,
         β = 8 / 3
-      const xn = x + σ * (-x + y) * 0.001 * speed
-      const yn = y + (-x * z + ρ * x - y) * 0.001 * speed
-      const zn = z + (x * y - β * z) * 0.001 * speed
+      const xn = x + σ * (-x + y) * delta
+      const yn = y + (-x * z + ρ * x - y) * delta
+      const zn = z + (x * y - β * z) * delta
       positions[i] = xn
       positions[i + 1] = yn
       positions[i + 2] = zn
