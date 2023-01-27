@@ -21,7 +21,7 @@ export default function Header({ title = titleDefault }) {
       <meta name='description' content={description} />
       <meta
         name='keywords'
-        content='Software Engineer,Product Manager,Project Manager,Data Scientist,Computer Scientist'
+        content='Random Option Picker, Picker, Particles, Three.js, JavaScript, Option Picker, RNG'
       />
       <meta name='robots' content='index,follow' />
       <meta name='distribution' content='web' />
@@ -68,13 +68,6 @@ export default function Header({ title = titleDefault }) {
       />
       <meta name='theme-color' content='#000' />
       <link rel='shortcut icon' href='/icons/favicon.ico' />
-
-      {/* 
-      Twitter Summary card
-        documentation: https://dev.twitter.com/cards/getting-started
-        Be sure validate your Twitter card markup on the documentation site. */}
-      <meta name='twitter:card' content='summary' />
-      <meta name='twitter:site' content='@onirenaud' />
     </Head>
   )
 }
