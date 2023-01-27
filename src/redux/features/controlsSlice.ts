@@ -17,7 +17,7 @@ const initialState: ControlsState = {
   axisYEnabled: true,
   axisZEnabled: true,
   lockedOn: false,
-  size: 0.0001,
+  size: 0.001,
   speed: 4,
   activeAttractor: 'lorenz',
 }
