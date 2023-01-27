@@ -5,7 +5,6 @@ import {
   Drawer,
   Typography,
   Stack,
-  useMediaQuery,
   IconButton,
 } from '@mui/material'
 import { OptionsList } from '../options/OptionsList'
@@ -13,9 +12,10 @@ import { useAppDispatch, useAppSelector } from '@/redux/store'
 import { closeOptions } from '@/redux/features/layoutSlice'
 import { Close } from '@mui/icons-material'
 import CreateOption from '../options/CreateOption'
+import { useIsLargeViewport } from '@/hooks/useIsLargeViewport'
 
 export const OptionsDrawer = () => {
-  const isNotMobile = useMediaQuery('(min-width:600px)')
+  const isBeeegScreen = useIsLargeViewport()
   const dispatch = useAppDispatch()
   const drawerOpen = useAppSelector((state) => state.layout.optionsOpen)
   const handleDrawerClose = () => {
@@ -51,7 +51,7 @@ export const OptionsDrawer = () => {
           background: 'rgba(0,0,0,0.9)',
           borderTop: '1px solid white',
 
-          maxWidth: isNotMobile ? 350 : null,
+          maxWidth: isBeeegScreen ? 350 : null,
         },
       }}>
       <Stack direction='row' justifyContent='space-between' spacing={3} p={2}>

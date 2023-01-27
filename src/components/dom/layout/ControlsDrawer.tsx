@@ -1,25 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Typography,
-  Stack,
-  Drawer,
-  useMediaQuery,
-  IconButton,
-} from '@mui/material'
-
+import { Typography, Stack, Drawer, IconButton } from '@mui/material'
 import { Controls } from '../controls/global/GlobalControls'
 import { SelectionDisplay } from '../SelectionDisplay'
 import { useAppDispatch, useAppSelector } from '@/redux/store'
-import { closeControls, openControls } from '@/redux/features/layoutSlice'
+import { closeControls } from '@/redux/features/layoutSlice'
 import { Close } from '@mui/icons-material'
+import { useIsLargeViewport } from '@/hooks/useIsLargeViewport'
 
 export const ControlsDrawer = () => {
-  const isNotMobile = useMediaQuery('(min-width:600px)')
+  const isBeeegScreen = useIsLargeViewport()
   const open = useAppSelector((state) => state.layout.controlsOpen)
   const dispatch = useAppDispatch()
   const handleClose = (event: React.KeyboardEvent | React.MouseEvent) => {
     dispatch(closeControls())
   }
+
   return (
     <Drawer
       keepMounted
@@ -47,7 +42,7 @@ export const ControlsDrawer = () => {
           background: 'rgba(0,0,0,0.8)',
           borderTop: 'solid white 1px',
 
-          maxWidth: isNotMobile ? 370 : null,
+          maxWidth: isBeeegScreen ? 370 : null,
         },
       }}>
       <Stack

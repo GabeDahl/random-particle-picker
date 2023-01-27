@@ -1,11 +1,4 @@
-import {
-  Button,
-  Typography,
-  Stack,
-  IconButton,
-  useMediaQuery,
-  Link,
-} from '@mui/material'
+import { Button, Typography, Stack, IconButton, Link } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '@/redux/store'
 import {
   closeControls,
@@ -14,9 +7,10 @@ import {
   openOptions,
 } from '@/redux/features/layoutSlice'
 import { GitHub, LinkedIn } from '@mui/icons-material'
+import { useIsLargeViewport } from '@/hooks/useIsLargeViewport'
 
 export const LayoutControls = () => {
-  const isNotMobile = useMediaQuery('(min-width:600px)')
+  const isBeeegScreen = useIsLargeViewport()
   const dispatch = useAppDispatch()
   const { controlsOpen, optionsOpen } = useAppSelector((state) => state.layout)
   const handleControlsClick = () => {
@@ -40,7 +34,7 @@ export const LayoutControls = () => {
         zIndex: 10000,
         top: 0,
         left: 0,
-        width: isNotMobile ? 450 : '100%',
+        width: isBeeegScreen ? 450 : '100%',
         backgroundColor: 'rgba(0,0,0,0.9)',
         p: 3,
       }}
