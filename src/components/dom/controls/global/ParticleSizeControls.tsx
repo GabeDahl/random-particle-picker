@@ -4,7 +4,7 @@ import { store, useAppDispatch } from '@/redux/store'
 import Typography from '@mui/material/Typography'
 import { updateSize } from '@/redux/features/controlsSlice'
 
-const sizes = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 1]
+const sizes = [0.0001, 0.001, 0.01, 0.1, 1]
 
 export const ParticleSizeControls = () => {
   const dispatch = useAppDispatch()
