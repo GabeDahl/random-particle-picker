@@ -4,6 +4,7 @@ import { Stack } from '@mui/material'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { Line } from 'three'
 import { SelectionPointerV2 } from './v2/SelectionPointerV2'
+import { Camera } from './Camera'
 
 extend({ Line_: Line })
 
@@ -29,6 +30,7 @@ export default function Scene({ children, ...props }) {
       <Canvas {...props} linear flat>
         <color attach='background' args={[0, 0, 0]} />
         <SelectionPointerV2 />
+        <Camera />
         {children}
         <Preload all />
         <OrbitControls zoomSpeed={1} maxDistance={1000} minDistance={0.1} />

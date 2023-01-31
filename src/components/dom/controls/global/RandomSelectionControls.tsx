@@ -3,7 +3,7 @@ import {
   updateSelectedParticle,
 } from '@/redux/features/optionsSlice'
 import { useAppDispatch, useAppSelector } from '@/redux/store'
-import { Button, Stack } from '@mui/material'
+import { Button, Grid, Stack } from '@mui/material'
 
 export default function SelectionControls() {
   const dispatch = useAppDispatch()
@@ -41,22 +41,27 @@ export default function SelectionControls() {
     return
   }
   return (
-    <Stack sx={{ pointerEvents: 'all' }} spacing={1}>
-      <Button
-        variant='outlined'
-        size='large'
-        color='primary'
-        onClick={selectRandomParticle}>
-        SELECT RANDOM PARTICLE
-      </Button>
-      <Button
-        size='small'
-        color='error'
-        onClick={() => {
-          dispatch(clearSelectedParticle())
-        }}>
-        Clear Selected Particle
-      </Button>
-    </Stack>
+    <Grid container sx={{ pointerEvents: 'all' }} alignItems='center'>
+      <Grid item xs={3}>
+        <Button
+          size='small'
+          color='error'
+          onClick={() => {
+            dispatch(clearSelectedParticle())
+          }}>
+          Clear
+        </Button>
+      </Grid>
+      <Grid item xs={9}>
+        <Button
+          variant='outlined'
+          size='large'
+          color='primary'
+          sx={{ backgroundColor: 'primary.main' }}
+          onClick={selectRandomParticle}>
+          SELECT RANDOM PARTICLE
+        </Button>
+      </Grid>
+    </Grid>
   )
 }

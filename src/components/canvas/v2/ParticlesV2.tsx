@@ -4,18 +4,9 @@ import { useFrame, useThree } from '@react-three/fiber'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { BufferAttribute, Color, Points } from 'three'
 import { useAppSelector } from '@/redux/store'
-import { attractors } from '@/util/attractors'
-// export const attractors = {
-//   lorenz: ({ x, y, z, delta }: AttractorParams): AttractorResults => {
-//     const σ = 10,
-//       ρ = 28,
-//       β = 8 / 3
-//     const xn = x + σ * (-x + y) * delta
-//     const yn = y + (-x * z + ρ * x - y) * delta
-//     const zn = z + (x * y - β * z) * delta
-//     return [xn, yn, zn]
-//   },
-// }
+import { Attractor, attractors } from '@/util/attractors'
+import { random } from 'maath'
+
 export const ParticleWrapper = ({ index }: { index: number }) => {
   const option = useAppSelector((state) => state.options.options[index])
   useAppSelector((state) => state.options.options)
@@ -30,65 +21,62 @@ export const ParticlesV2 = ({ option }: { option: Option }) => {
   const { size, speed, activeAttractor } = useAppSelector(
     (state) => state.controls,
   )
+  const cachedAttractor = useRef<Attractor>(null)
+  useEffect(() => {
+    cachedAttractor.current = attractors[activeAttractor]
+  }, [activeAttractor])
 
-  const initialPositions = useMemo(() => {
+  const initialPositions: Float32Array = useMemo(() => {
     const positions = new Float32Array(numParticles * 3)
     for (let i = 0; i < numParticles * 3; i += 3) {
-      const pt = getPoint()
-      positions[i] = pt.x * 2
-      positions[i + 1] = pt.y * 2
-      positions[i + 2] = pt.z * 2
-    }
+      const [x, y, z] = generateRandomPointInSphere(1)
 
+      positions[i] = x + (cachedAttractor.current?.initialPosition[0] || 0)
+      positions[i + 1] = y + (cachedAttractor.current?.initialPosition[1] || 0)
+      positions[i + 2] = z + (cachedAttractor.current?.initialPosition[2] || 0)
+    }
+    console.log(positions)
     return positions
-  }, [numParticles])
+  }, [activeAttractor, numParticles, forceRerenderCounter])
 
   useEffect(() => {
     const positions = pointsRef.current.geometry.attributes.position.array
-    for (let i = 0; i < numParticles * 3; i += 3) {
-      const pt = getPoint()
-      positions[i] = pt.x * 2
-      positions[i + 1] = pt.y * 2
-      positions[i + 2] = pt.z * 2
+    for (let i = 0; i < numParticles * 3; i++) {
+      positions[i] = initialPositions[i]
     }
     pointsRef.current.geometry.attributes.position.needsUpdate = true
-  }, [forceRerenderCounter])
+  }, [])
+
   useFrame((state, delta) => {
-    if (delta > 0.2) return
+    if (delta > 0.2 || !cachedAttractor.current) return
     const positions = pointsRef.current.geometry.attributes.position.array
     for (let i = 0; i < numParticles * 3; i += 3) {
       const x = positions[i],
         y = positions[i + 1],
         z = positions[i + 2]
-
-      // [xn, yn, zn] = attractors[activeAttractor]({
-      //   x,
-      //   y,
-      //   z,
-      //   delta: 0.001 * speed,
-      // })
-      const σ = 10,
-        ρ = 28,
-        β = 8 / 3
-      const xn = x + σ * (-x + y) * 0.001 * speed
-      const yn = y + (-x * z + ρ * x - y) * 0.001 * speed
-      const zn = z + (x * y - β * z) * 0.001 * speed
+      const [xn, yn, zn] = cachedAttractor.current.stepForward({
+        x,
+        y,
+        z,
+        delta: speed * 0.0015,
+      })
       positions[i] = xn
       positions[i + 1] = yn
       positions[i + 2] = zn
     }
     pointsRef.current.geometry.attributes.position.needsUpdate = true
   })
+  const scaledColor = useMemo(
+    () => new Color(color).multiplyScalar(brightness),
+    [color, brightness],
+  )
   return (
     <points
       visible={isRendering}
       frustumCulled={false}
       ref={pointsRef}
       name={`${option.name}-particles`}>
-      <pointsMaterial
-        size={size}
-        color={new Color(color).multiplyScalar(brightness)}
-      />
+      <pointsMaterial size={size} color={scaledColor} />
       <bufferGeometry
         attributes={{
           position: new BufferAttribute(initialPositions, 3),
@@ -98,21 +86,6 @@ export const ParticlesV2 = ({ option }: { option: Option }) => {
   )
 }
 
-function getPoint() {
-  const u = Math.random()
-  const v = Math.random()
-  const theta = u * 2.0 * Math.PI
-  const phi = Math.acos(2.0 * v - 1.0)
-  const r = Math.cbrt(Math.random())
-  const sinTheta = Math.sin(theta)
-  const cosTheta = Math.cos(theta)
-  const sinPhi = Math.sin(phi)
-  const cosPhi = Math.cos(phi)
-  const x = r * sinPhi * cosTheta
-  const y = r * sinPhi * sinTheta
-  const z = r * cosPhi
-  return { x: x, y: y, z: z }
-}
 export default function Particles() {
   const { camera } = useThree()
   useEffect(() => {
@@ -126,4 +99,20 @@ export default function Particles() {
       ))}
     </>
   )
+}
+
+function generateRandomPointInSphere(radius: number) {
+  const theta = Math.random() * 2 * Math.PI
+  const phi = Math.acos(2 * Math.random() - 1)
+  const x = radius * Math.sin(phi) * Math.cos(theta)
+  const y = radius * Math.sin(phi) * Math.sin(theta)
+  const z = radius * Math.cos(phi)
+  return [x, y, z]
+}
+
+function generateRandomPointInCube(sideLength: number) {
+  var x = (Math.random() - 0.5) * sideLength
+  var y = (Math.random() - 0.5) * sideLength
+  var z = (Math.random() - 0.5) * sideLength
+  return [x, y, z]
 }

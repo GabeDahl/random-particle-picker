@@ -1,4 +1,4 @@
-import { ActiveAttractor } from '@/util/attractors'
+import { Attractor, attractors } from '@/util/attractors'
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
@@ -9,7 +9,7 @@ export interface ControlsState {
   axisZEnabled: boolean
   size: number
   speed: number
-  activeAttractor: ActiveAttractor
+  activeAttractor: keyof typeof attractors
 }
 
 const initialState: ControlsState = {
@@ -56,7 +56,10 @@ export const controlsSlice = createSlice({
     updateSpeed: (state, action: PayloadAction<number>) => {
       state.speed = action.payload
     },
-    updateActiveAttractor: (state, action: PayloadAction<ActiveAttractor>) => {
+    updateActiveAttractor: (
+      state,
+      action: PayloadAction<keyof typeof attractors>,
+    ) => {
       state.activeAttractor = action.payload
     },
   },

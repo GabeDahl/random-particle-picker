@@ -30,7 +30,7 @@ export const ParticleSpeedControls = () => {
         sx={{ pointerEvents: 'all' }}
         min={0.1}
         step={0.1}
-        max={6.9}
+        max={10}
         valueLabelDisplay='auto'
         value={inputValue}
         onChange={handleSliderChange}
