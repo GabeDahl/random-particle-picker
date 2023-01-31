@@ -109,10 +109,3 @@ function generateRandomPointInSphere(radius: number) {
   const z = radius * Math.cos(phi)
   return [x, y, z]
 }
-
-function generateRandomPointInCube(sideLength: number) {
-  var x = (Math.random() - 0.5) * sideLength
-  var y = (Math.random() - 0.5) * sideLength
-  var z = (Math.random() - 0.5) * sideLength
-  return [x, y, z]
-}
