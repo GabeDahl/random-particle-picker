@@ -57,7 +57,7 @@ export default function SelectionControls() {
           variant='outlined'
           size='large'
           color='primary'
-          sx={{ backgroundColor: 'primary.main' }}
+          
           onClick={selectRandomParticle}>
           SELECT RANDOM PARTICLE
         </Button>
